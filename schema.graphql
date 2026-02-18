@@ -1,0 +1,43 @@
+# Yeti Telemetry Schema
+
+"""
+A log event captured from the tracing subscriber.
+"""
+type Log @table(database: "yeti-telemetry") @export(sse: true) {
+  id: ID! @primaryKey
+  timestamp: String! @indexed
+  level: String! @indexed
+  target: String! @indexed
+  message: String!
+  fields: String
+  __createdAt__: String
+}
+
+"""
+A span represents a single timed operation.
+"""
+type Span @table(database: "yeti-telemetry") @export(sse: true) {
+  id: ID! @primaryKey
+  traceId: String @indexed
+  parentSpanId: String
+  name: String! @indexed
+  target: String!
+  level: String!
+  startTime: String!
+  endTime: String
+  durationMs: Float
+  fields: String
+  __createdAt__: String
+}
+
+"""
+A metric data point.
+"""
+type Metric @table(database: "yeti-telemetry") @export(sse: true) {
+  id: ID! @primaryKey
+  name: String! @indexed
+  value: Float!
+  attributes: String
+  timestamp: String!
+  __createdAt__: String
+}
