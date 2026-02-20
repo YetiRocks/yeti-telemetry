@@ -77,9 +77,7 @@ function App() {
         <div className="header-left">
           <img src="./logo_white.svg" alt="Yeti" className="logo" />
         </div>
-        <div className="header-right">
-          <div className="header-title">Telemetry</div>
-        </div>
+        <div className="header-title">Telemetry</div>
       </header>
 
       <div className="main">
