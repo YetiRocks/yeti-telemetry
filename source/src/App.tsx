@@ -8,34 +8,35 @@ import { SettingsPanel } from './components/SettingsPanel'
 import { ConnectorDetail } from './components/ConnectorDetail'
 import { AddConnectorModal } from './components/AddConnectorModal'
 
+const BASE = '/yeti-telemetry'
 const VALID_NAV: NavId[] = ['logs', 'spans', 'metrics', 'status']
 
-function getNavFromHash(): NavId {
-  const hash = window.location.hash.replace('#/', '').replace('#', '')
-  return VALID_NAV.includes(hash as NavId) ? (hash as NavId) : 'logs'
+function getNavFromPath(): NavId {
+  const path = window.location.pathname.replace(BASE, '').replace(/^\//, '')
+  return VALID_NAV.includes(path as NavId) ? (path as NavId) : 'logs'
 }
 
 function App() {
-  const [selected, setSelected] = useState<NavId>(getNavFromHash)
+  const [selected, setSelected] = useState<NavId>(getNavFromPath)
   const [paused, setPaused] = useState(false)
   const [connectors, setConnectors] = useState<Connector[]>([])
   const [selectedConnector, setSelectedConnector] = useState<string | null>(null)
   const [showAddConnector, setShowAddConnector] = useState(false)
 
-  // Sync hash → state on popstate (back/forward)
+  // Sync path → state on popstate (back/forward)
   useEffect(() => {
-    const onHashChange = () => {
-      setSelected(getNavFromHash())
+    const onPopState = () => {
+      setSelected(getNavFromPath())
       setSelectedConnector(null)
     }
-    window.addEventListener('hashchange', onHashChange)
-    return () => window.removeEventListener('hashchange', onHashChange)
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
   }, [])
 
-  // Sync state → hash on nav change
+  // Sync state → path on nav change
   const handleSelect = useCallback((id: NavId) => {
     setSelected(id)
-    window.location.hash = `#/${id}`
+    window.history.pushState(null, '', `${BASE}/${id}`)
   }, [])
 
   const connections = { logs: true, spans: true, metrics: true }
@@ -75,7 +76,7 @@ function App() {
     <div className="app">
       <header className="header">
         <div className="header-left">
-          <img src="./logo_white.svg" alt="Yeti" className="logo" />
+          <img src={`${import.meta.env.BASE_URL}logo_white.svg`} alt="Yeti" className="logo" />
         </div>
         <div className="header-title">Telemetry</div>
       </header>

@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 
 export default defineConfig({
-  base: './',
+  base: '/yeti-telemetry/',
   plugins: [react()],
   resolve: {
     alias: { '@yeti': path.resolve(__dirname, '../../../shared') },
