@@ -16,7 +16,9 @@ static_files:
   path: web
   route: /
   index: index.html
-
+  build:
+    sourceDir: source
+    command: npm run build
 dependencies:
   serde_yaml: "0.9"
   opentelemetry: { version: "0.31", features: ["trace", "metrics"] }
